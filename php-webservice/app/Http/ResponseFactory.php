@@ -3,6 +3,8 @@
 namespace App\Http;
 
 use Laravel\Lumen\Http\ResponseFactory as Response;
+use Illuminate\Contracts\Support\Arrayable as Arrayable;
+use Zend;
 
 class ResponseFactory extends Response{
 
@@ -10,7 +12,7 @@ class ResponseFactory extends Response{
         $request = app('request');
         $acceptHeader = $request->header('accept');
         
-        if(empty($acceptHeader)){
+        if($acceptHeader == '*/*'){
             return $this->json($content,$status,$headers);
         }
         
@@ -20,7 +22,8 @@ class ResponseFactory extends Response{
                 $resultado = $this->json($content,$status,$headers);
                 break;
             case 'application/xml':
-                $result = $this->getXML($content); // conteudo que quero serializar para xml
+                // echo 'die';die;
+                $resultado = parent::make($this->getXML($content),$status,$headers); // conteudo que quero serializar para xml
                 break;
         }
         return $resultado;
@@ -29,11 +32,12 @@ class ResponseFactory extends Response{
     protected function getXML($data){
 
         if($data instanceof Arrayable){
+        //     echo 'oi';die;
             $data = $data->toArray();
         }
         //zend
-        $config = new Config(['result' => $data],true);
-        $escritorXML = new Xml();
+        $config = new \Zend\Config\Config(['result' => $data],true);
+        $escritorXML = new \Zend\Config\Writer\Xml();
 
         return $escritorXML->toString($config);
 

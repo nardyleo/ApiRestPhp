@@ -30,3 +30,14 @@ $router->group([
     $router->delete('{id}','ClientsController@destroy');
 });
 
+$router->group([
+    'prefix' => 'api/clients/{client}/addresses',
+    // 'namespace' => 'App\Http\Controllers'
+], function() use($router){ 
+    $router->get('','AddressesController@index'); //colocar controler que vai fazer processo do get
+    $router->get('{id}','AddressesController@show');
+    $router->post('','AddressesController@store');  // criando elemento
+    $router->put('{id}','AddressesController@update');
+    $router->delete('{id}','AddressesController@destroy');
+});
+

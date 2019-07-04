@@ -10,7 +10,7 @@ class ClientsController extends Controller
 {
     // utlizamos javascript
     public function index(){
-       return son_response(CLient::all());
+       return son_response()->make(Client::all());
                // return Client::all(); // colection do eloquent, laravel transforma pra json
     }
 
@@ -18,7 +18,7 @@ class ClientsController extends Controller
         if(!($client = Client::find($id))){
             throw new ModelNotFoundException("Cliente requisitado não existe");
         }
-        return $client;
+        return son_response()->make($client);
     }
 
 
@@ -31,7 +31,7 @@ class ClientsController extends Controller
         ]);
         
         $client = Client::create($request->all());
-        return response()->json($client,201); // 201 codigo creado
+        return son_response()->make($client,201);
     }
 
     public function update(Request $request,$id){
@@ -47,7 +47,7 @@ class ClientsController extends Controller
 
         $client->fill($request->all());
         $client->save();
-        return response()->json($client,200);
+        return son_response()->make($client,200);
     }
 
     public function destroy($id){
@@ -55,7 +55,7 @@ class ClientsController extends Controller
             throw new ModelNotFoundException("Cliente requisitado não existe");
         }
         $client->delete();
-        return response()->json("",204);
+        return son_response()->make("",204);
     }
 
 
